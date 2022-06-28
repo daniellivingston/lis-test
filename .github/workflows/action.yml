@@ -20,12 +20,12 @@ jobs:
     
     steps:
       - name: Clone LIS
-      - uses: actions/checkout@v3
+        uses: actions/checkout@v3
         with:
           submodules: true
       
       - name: Checkout LIS version
-      - run: |
+        run: |
           pushd lis/
           git fetch --all --tags
           git checkout tags/${{ matrix.lis_git_tag }}
