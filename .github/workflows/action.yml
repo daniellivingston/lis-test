@@ -44,6 +44,25 @@ jobs:
           # you can also do 'mpich'
           MPI: openmpi
 
+      - name: Compiler versions
+        run: |
+          echo "======================"
+          echo "CONFIG:"
+          echo "  --> os: ${{ matrix.os }}"
+          echo "  --> gcc: ${{ matrix.gcc_version }}"
+          echo "  --> lis_git_tag: ${{ matrix.lis_git_tag }}"
+          echo ""
+          
+          echo "=== UBUNTU VERSION ==="
+          lsb_release -a
+          echo ""
+          
+          echo "=== COMPILER VERSIONS ==="
+          echo "GCC: $(gcc --version)"
+          echo "GFORTRAN: $(gfortran --version)"
+          echo "MPICC: $(mpicc --version)"
+          echo ""
+
       - name: Build LIS
         run: |
           make CC=${CC} FC=${FC} all
