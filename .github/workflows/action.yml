@@ -1,0 +1,46 @@
+name: LIS Matrix Testing
+on: [push]
+
+jobs:
+  matrix_testing:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, ubuntu-18.04, ubuntu-20.04]
+        gcc_version: [7, 8, 10]
+        lis_git_tag: ["2.0.30", "1.8.15"]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Clone LIS
+      - uses: actions/checkout@v3
+        with:
+          submodules: true
+      - run: |
+          pushd lis/
+          git fetch --all --tags
+          git checkout tags/${{ matrix.lis_git_tag }}
+          popd
+
+      - name: Checkout GCC / MPI
+        run: |
+          sudo apt update
+          sudo apt upgrade -y
+          sudo apt install -y \
+            gcc-${{ matrix.gcc_version }} \
+            gfortran-${{ matrix.gcc_version }} \
+            ${MPI}-bin \
+            lib${MPI}-dev
+        env:
+          # you can also do 'mpich'
+          MPI: openmpi
+
+      - name: Build LIS
+        run: |
+          make CC=${CC} FC=${FC} all
+        env:
+          CC: gcc-${{ matrix.gcc_version}}
+          FC: gfortran-${{ matrix.gcc_version}}
+
+      - name: Testing and other steps
+        run: |
+          echo "Change me to your custom actions"
+
